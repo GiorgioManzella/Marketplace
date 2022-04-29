@@ -9,7 +9,7 @@ const productSchema = new Schema({
   imageUrl: { type: "string", required: true },
   price: { type: "string", required: true },
   category: { type: "string" },
-  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
 });
 
 export default model("product", productSchema);
