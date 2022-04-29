@@ -3,6 +3,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import productRouter from "./services/products/index.js";
 import listEndpoints from "express-list-endpoints";
+import {
+  genericErrorHandler,
+  notFoundErrorHandler,
+  badRequestErrorHandler,
+  unauthorizedErrorHandler,
+} from "./errorHandler.js";
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +21,12 @@ server.use(express.json());
 //endpoints ----------------------------------------------------------------
 
 server.use("/product", productRouter);
+
+// error handlers ----------------------------------------------------------------
+server.use(badRequestErrorHandler);
+server.use(unauthorizedErrorHandler);
+server.use(notFoundErrorHandler);
+server.use(genericErrorHandler);
 
 //connection to db-----------------------------------------------------------
 
