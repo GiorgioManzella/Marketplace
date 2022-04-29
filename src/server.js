@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import productRouter from "../services/products/index.js";
+import productRouter from "./services/products/index.js";
 
 const server = express();
 const port = process.env.PORT || 3000;
