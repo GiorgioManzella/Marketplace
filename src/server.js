@@ -5,7 +5,8 @@ import productRouter from "./services/products/index.js";
 import listEndpoints from "express-list-endpoints";
 
 const server = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3003;
+const port2 = 3005;
 
 // middlewares ----------------------------------------------------------------
 
@@ -18,16 +19,16 @@ server.use("/product", productRouter);
 
 //connection to db-----------------------------------------------------------
 
-// mongoose.connect(
-//   "mongodb+srv://test:test@cluster0.teeo4.mongodb.net/Marketplace?retryWrites=true&w=majority"
-// );
-// mongoose.connection.on("connected", () => {
-//   console.log("successifully connected"),
-//     server.listen(port, () => {
-//       console.table(listEndpoints(server));
-//       console.log(`server is running on port: ${port}`);
-//     });
-// });
+mongoose.connect(
+  "mongodb+srv://test:test@cluster0.teeo4.mongodb.net/Marketplace?retryWrites=true&w=majority"
+);
+mongoose.connection.on("connected", () => {
+  console.log("successifully connected"),
+    server.listen(port2, () => {
+      console.table(listEndpoints(server));
+      console.log(`server is running on port: ${port}`);
+    });
+});
 
 const initialize = async () => {
   try {
