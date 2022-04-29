@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import productRouter from "../services/products/index.js";
 
 const server = express();
 const port = process.env.PORT || 3000;
@@ -9,6 +10,10 @@ const port = process.env.PORT || 3000;
 
 server.use(cors());
 server.use(express.json());
+
+//endpoints ----------------------------------------------------------------
+
+server.use("/product", productRouter);
 
 //connection to db-----------------------------------------------------------
 

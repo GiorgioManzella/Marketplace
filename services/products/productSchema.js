@@ -9,7 +9,7 @@ const productSchema = new Schema({
   imangeUrl: { type: "string", required: true },
   price: { type: "string", required: true },
   category: { type: "string" },
-  reviews: [],
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
 });
 
 export default model("product", productSchema);
