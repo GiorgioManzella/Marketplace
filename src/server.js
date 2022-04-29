@@ -18,11 +18,30 @@ server.use("/product", productRouter);
 
 //connection to db-----------------------------------------------------------
 
-mongoose.connect(process.env.MONGO_CONNECTION);
-mongoose.connection.on("connected", () => {
-  console.log("successifully connected"),
-    server.listen(port, () => {
-      console.table(listEndpoints(server));
-      console.log(`server is running on port: ${port}`);
+// mongoose.connect(
+//   "mongodb+srv://test:test@cluster0.teeo4.mongodb.net/Marketplace?retryWrites=true&w=majority"
+// );
+// mongoose.connection.on("connected", () => {
+//   console.log("successifully connected"),
+//     server.listen(port, () => {
+//       console.table(listEndpoints(server));
+//       console.log(`server is running on port: ${port}`);
+//     });
+// });
+
+const initialize = async () => {
+  try {
+    server.listen(port, async () => {
+      console.log("server is running on port " + port);
     });
-});
+
+    server.on("error", (error) => {
+      console.log("server error: " + error);
+    });
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+initialize();
