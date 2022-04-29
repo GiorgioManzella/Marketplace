@@ -2,24 +2,16 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-// {
-//         "_id": "123455", //SERVER GENERATED
-//         "comment": "A good book but definitely I don't like many parts of the plot", //REQUIRED
-//         "rate": 3, //REQUIRED, max 5
-//         "productId": "5d318e1a8541744830bef139", //REQUIRED reference to Products Table
-//         "createdAt": "2019-08-01T12:46:45.895Z"  //SERVER GENERATED
-// }
-
-const ReviewModel = new Schema(
+const reviewSchema = new Schema(
   {
     comment: { type: String, required: true },
-    rate: { type: Number, required: true, max: 5 },
-    productId: { type: Schema.Types.ObjectId, ref: "Products" },
+    rate: { type: Number, min: 1, max: 5, required: true },
+    productId: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   {
-    timestamp: true,
+    timestamps: true,
     updatedAt: false,
   }
 );
 
-export default model("Review", ReviewModel);
+export default model("reviews", reviewSchema);

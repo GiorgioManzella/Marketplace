@@ -3,9 +3,17 @@ import productSchema from "./productSchema.js";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
+import q2m from "query-to-mongo";
 
 const productRouter = express.Router();
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
+
+////////////////////////////////----------
 const cloudinaryUpload = multer({
   storage: new CloudinaryStorage({
     cloudinary,
@@ -17,16 +25,42 @@ const cloudinaryUpload = multer({
 
 productRouter.get("/", async function (req, res, next) {
   try {
-    const products = await productSchema.find();
+    const mongoQuery = q2m(req.query);
+
+    const products = await productSchema
+      .find(mongoQuery.criteria, mongoQuery.options.fields)
+      .sort(mongoQuery.options.sort)
+      .limit(mongoQuery.options.limit || 10)
+      .skip(mongoQuery.options.skip || 0)
+      .populate({ path: "reviews" });
+
     res.status(200).send(products);
   } catch (error) {
     next(error);
   }
 });
-// GET BY ID ---------------------------------------------------------------------------
-productRouter.get("/Id", async function (req, res, next) {
+
+productRouter.get("/:productId/", async function (req, res, next) {
   try {
-    const product = await productSchema.findById(req.params.Id);
+    const mongoQuery = q2m(req.query);
+
+    const products = await productSchema
+      .find(mongoQuery.criteria, mongoQuery.options.fields)
+      .sort(mongoQuery.options.sort)
+      .limit(mongoQuery.options.limit || 10)
+      .skip(mongoQuery.options.skip || 0)
+      .populate({ path: "reviews", select: "comment" });
+
+    res.status(200).send(products);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET BY ID ---------------------------------------------------------------------------
+productRouter.get("/:Id", async function (req, res, next) {
+  try {
+    const product = await productSchema.findById(req.params.id);
     res.status(200).send(product);
   } catch (error) {
     next(createError(404, "Product not found"));
@@ -46,11 +80,11 @@ productRouter.post("/", async function (req, res, next) {
 // POST IMAGE ---------------------------------------------------------------------------
 
 productRouter.post(
-  "/upload",
+  "/:id/upload",
   cloudinaryUpload,
   async function (req, res, next) {
     try {
-      console.log("req file", req.file);
+      console.log("req file");
       res.send("image posted");
     } catch (error) {
       next(error);
@@ -59,23 +93,28 @@ productRouter.post(
 );
 
 // PUT ---------------------------------------------------------------------------
-productRouter.put("/", async function (req, res, next) {
-  try {
-    const productUpdate = await productSchema.findByIdAndUpdate(
-      req.params.id,
-      req.body
-    );
 
-    res.status(202).send(productUpdate);
-  } catch (error) {
-    next(error);
+productRouter.put(
+  "/:productId",
+  cloudinaryUpload,
+  async function (req, res, next) {
+    try {
+      const productUpdate = await productSchema.findByIdAndUpdate(
+        req.params.productId,
+        req.body,
+        { new: true }
+      );
+      res.status(202).send(productUpdate);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 //DELETE -------------------------------------------------------------------------
-productRouter.delete("/id", async function (req, res, next) {
+productRouter.delete("/:productId", async function (req, res, next) {
   try {
-    const deleteProduct = await productSchema.findByIdAndDelete(req.params.id);
-    res.status(204).send(`product ${req.params.id} deleted`);
+    await productSchema.findByIdAndDelete(req.params.productId);
+    res.status(204).send(`product ${req.params.productId} deleted`);
   } catch (error) {
     next(error);
   }
