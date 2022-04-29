@@ -5,25 +5,29 @@ const productRouter = express.Router();
 
 productRouter.get("/", async function (req, res, next) {
   try {
+    const products = await productSchema.find();
+    res.status(200).send(products);
   } catch (error) {}
 });
 
-productRouter.get("/", async function (req, res, next) {
+productRouter.get("/productId", async function (req, res, next) {
   try {
   } catch (error) {}
 });
 
-productRouter.get("/", async function (req, res, next) {
+productRouter.post("/", async function (req, res, next) {
   try {
   } catch (error) {}
 });
 
-productRouter.get("/", async function (req, res, next) {
+productRouter.put("/", async function (req, res, next) {
   try {
   } catch (error) {}
 });
 
-productRouter.get("/", async function (req, res, next) {
+productRouter.delete("/", async function (req, res, next) {
   try {
   } catch (error) {}
 });
+
+export default productRouter;
