@@ -46,7 +46,7 @@ productRouter.post("/", async function (req, res, next) {
 // POST IMAGE ---------------------------------------------------------------------------
 
 productRouter.post(
-  "/upload",
+  "/Id/upload",
   cloudinaryUpload,
   async function (req, res, next) {
     try {
@@ -72,9 +72,9 @@ productRouter.put("/", async function (req, res, next) {
   }
 });
 //DELETE -------------------------------------------------------------------------
-productRouter.delete("/id", async function (req, res, next) {
+productRouter.delete("/Id", async function (req, res, next) {
   try {
-    const deleteProduct = await productSchema.findByIdAndDelete(req.params.id);
+    const deleteProduct = await productSchema.findByIdAndDelete(req.params.Id);
     res.status(204).send(`product ${req.params.id} deleted`);
   } catch (error) {
     next(error);
