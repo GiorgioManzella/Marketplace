@@ -72,13 +72,21 @@ productRouter.post("/", async function (req, res, next) {
 
 // POST IMAGE ---------------------------------------------------------------------------
 
-productRouter.post("/upload", async function (req, res, next) {
-  try {
-    res.send("image posted");
-  } catch (error) {}
-});
+productRouter.post(
+  "/Id/upload",
+  cloudinaryUpload,
+  async function (req, res, next) {
+    try {
+      console.log("req file", req.file);
+      res.send("image posted");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // PUT ---------------------------------------------------------------------------
+
 productRouter.put(
   "/:productId",
   cloudinaryUpload,
@@ -89,7 +97,6 @@ productRouter.put(
         req.body,
         { new: true }
       );
-
       res.status(202).send(productUpdate);
     } catch (error) {
       next(error);
@@ -101,6 +108,8 @@ productRouter.delete("/:productId", async function (req, res, next) {
   try {
     await productSchema.findByIdAndDelete(req.params.productId);
     res.status(204).send(`product ${req.params.productId} deleted`);
+
+
   } catch (error) {
     next(error);
   }
