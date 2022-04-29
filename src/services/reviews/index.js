@@ -1,6 +1,7 @@
 import express from "express";
 import createError from "http-errors";
-import reviewModel from "./model.js";
+import reviewModel from "./reviewSchema.js";
+import q2m from "query-to-mongo";
 
 const reviewRouter = express.Router();
 
@@ -16,7 +17,14 @@ reviewRouter.post("/", async (req, res, next) => {
 
 reviewRouter.get("/", async (req, res, next) => {
   try {
-    const getReviews = await reviewModel.find();
+    const mongoQuery = q2m(req.query);
+
+    const getReviews = await reviewModel
+      .find(mongoQuery.criteria, mongoQuery.options.fields)
+      .sort(mongoQuery.options.sort)
+      .limit(mongoQuery.options.limit || 10)
+      .skip(mongoQuery.options.skip || 0)
+      .populate({ path: "productId" });
     res.send(getReviews);
   } catch (error) {
     next(error);
