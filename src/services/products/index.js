@@ -45,14 +45,21 @@ productRouter.post("/", async function (req, res, next) {
 
 // POST IMAGE ---------------------------------------------------------------------------
 
-productRouter.post("/upload", async function (req, res, next) {
-  try {
-    res.send("image posted");
-  } catch (error) {}
-});
+productRouter.post(
+  "/upload",
+  cloudinaryUpload,
+  async function (req, res, next) {
+    try {
+      console.log("req file", req.file);
+      res.send("image posted");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // PUT ---------------------------------------------------------------------------
-productRouter.put("/", cloudinaryUpload, async function (req, res, next) {
+productRouter.put("/", async function (req, res, next) {
   try {
     const productUpdate = await productSchema.findByIdAndUpdate(
       req.params.id,
