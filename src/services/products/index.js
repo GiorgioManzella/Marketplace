@@ -2,13 +2,16 @@ import express from "express";
 import productSchema from "./productSchema.js";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
-import { cloudinaryStorage } from "multer-storage-cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const productRouter = express.Router();
 
 const cloudinaryUpload = multer({
-  storage: new cloudinaryStorage({ cloudinary }),
-});
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: { folder: "test-folder" },
+  }),
+}).single("image");
 
 //-GET ---------------------------------------------------------------------------
 
@@ -42,13 +45,14 @@ productRouter.post("/", async function (req, res, next) {
 
 // POST IMAGE ---------------------------------------------------------------------------
 
-productRouter.post("/id/upload", async function (req, res, next) {
+productRouter.post("/upload", async function (req, res, next) {
   try {
+    res.send("image posted");
   } catch (error) {}
 });
 
 // PUT ---------------------------------------------------------------------------
-productRouter.put("/", async function (req, res, next) {
+productRouter.put("/", cloudinaryUpload, async function (req, res, next) {
   try {
     const productUpdate = await productSchema.findByIdAndUpdate(
       req.params.id,
