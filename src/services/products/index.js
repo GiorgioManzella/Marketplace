@@ -25,6 +25,8 @@ const cloudinaryUpload = multer({
 
 productRouter.get("/", async function (req, res, next) {
   try {
+    const mongoQuery = q2m(req.query);
+
     const products = await productSchema
       .find(mongoQuery.criteria, mongoQuery.options.fields)
       .sort(mongoQuery.options.sort)
