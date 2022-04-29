@@ -6,6 +6,13 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const productRouter = express.Router();
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
+
+////////////////////////////////----------
 const cloudinaryUpload = multer({
   storage: new CloudinaryStorage({
     cloudinary,
@@ -17,16 +24,17 @@ const cloudinaryUpload = multer({
 
 productRouter.get("/", async function (req, res, next) {
   try {
-    const products = await productSchema.find();
+    const products = await productSchema.find().skip(req.query).limit(10);
+    console.log(process.env.CLOUDINARY_NAME, process.env.PORT);
     res.status(200).send(products);
   } catch (error) {
     next(error);
   }
 });
 // GET BY ID ---------------------------------------------------------------------------
-productRouter.get("/Id", async function (req, res, next) {
+productRouter.get("/id", async function (req, res, next) {
   try {
-    const product = await productSchema.findById(req.params.Id);
+    const product = await productSchema.findById(req.params.id);
     res.status(200).send(product);
   } catch (error) {
     next(createError(404, "Product not found"));
@@ -46,11 +54,11 @@ productRouter.post("/", async function (req, res, next) {
 // POST IMAGE ---------------------------------------------------------------------------
 
 productRouter.post(
-  "/Id/upload",
+  "/:id/upload",
   cloudinaryUpload,
   async function (req, res, next) {
     try {
-      console.log("req file", req.file);
+      console.log("req file");
       res.send("image posted");
     } catch (error) {
       next(error);
