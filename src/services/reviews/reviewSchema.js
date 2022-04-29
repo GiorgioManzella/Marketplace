@@ -6,7 +6,7 @@ const reviewSchema = new Schema(
   {
     comment: { type: String, required: true },
     rate: { type: Number, min: 1, max: 5, required: true },
-    product: [{ type: Schema.Types.ObjectId, ref: "Products" }],
+    productId: [{ type: Schema.Types.ObjectId, ref: "Products" }],
   },
   {
     timestamps: true,
