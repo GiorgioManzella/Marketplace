@@ -7,7 +7,7 @@
     "http-errors": "^2.0.0",
     "mongoose": "^6.3.1",
 
-    "query-to-mongo": "^0.10.2"
+    "query-to-mongo": "^0.10.2",
 
     "multer": "^1.4.4",
     "multer-storage-cloudinary": "^4.0.0",

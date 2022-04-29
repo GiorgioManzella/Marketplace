@@ -25,13 +25,8 @@ mongoose.connect(
   "mongodb+srv://test:test@cluster0.teeo4.mongodb.net/Marketplace?retryWrites=true&w=majority"
 );
 mongoose.connection.on("connected", () => {
-
   console.log("successfully connected"),
-    server.listen(port, () => {
-
-  console.log("successifully connected"),
     server.listen(port2, () => {
- Giorgio
       console.table(listEndpoints(server));
       console.log(`server is running on port: ${port}`);
     });
